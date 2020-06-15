@@ -2,8 +2,7 @@
 FROM quay.io/spivegin/gitonly:latest AS git
 
 FROM quay.io/spivegin/golang:v1.14.1 AS builder
-WORKDIR /opt/src/src/sc.tpnfc.us/djbigty/twrapper
-ADD . /opt/src/src/sc.tpnfc.us/djbigty/twrapper
+WORKDIR /opt/src/src/sc.tpnfc.us/djbigty/
 
 RUN ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa && git config --global user.name "quadtone" && git config --global user.email "quadtone@txtsme.com"
 COPY --from=git /root/.ssh /root/.ssh
@@ -26,7 +25,8 @@ RUN git config --global url.git@github.com:.insteadOf https://github.com/ &&\
     git config --global url.git@gitea.com:.insteadOf https://gitea.com/ &&\
     git config --global url."https://${deploy}@sc.tpnfc.us/".insteadOf "https://sc.tpnfc.us/"
 
-RUN cd /opt/src/src/sc.tpnfc.us/djbigty/twrapper &&\
+RUN git clone https://sc.tpnfc.us/djbigty/twrapper &&\
+    cd /opt/src/src/sc.tpnfc.us/djbigty/twrapper &&\
     go mod tidy &&\
     go build -o build/twrapper ./twrapper
 
